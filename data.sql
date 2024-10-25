@@ -4,10 +4,24 @@ DROP TABLE IF EXISTS invoices;
 DROP TABLE IF EXISTS companies;
 
 CREATE TABLE companies (
-    code text PRIMARY KEY,
+    id serial PRIMARY KEY,
+    code text NOT NULL UNIQUE,
     name text NOT NULL UNIQUE,
     description text
 );
+
+CREATE TABLE industries (
+  id serial PRIMARY KEY,
+  ind_code text NOT NULL,
+  industry text NOT NULL
+);
+
+CREATE TABLE comp_industries (
+  company_id INTEGER NOT NULL REFERENCES companies,
+  industry_id INTEGER NOT NULL REFERENCES industries,
+  PRIMARY KEY(company_id, industry_id)
+);
+
 
 CREATE TABLE invoices (
     id serial PRIMARY KEY,
@@ -18,6 +32,7 @@ CREATE TABLE invoices (
     paid_date date,
     CONSTRAINT invoices_amt_check CHECK ((amt > (0)::double precision))
 );
+
 
 INSERT INTO companies
   VALUES ('apple', 'Apple Computer', 'Maker of OSX.'),
